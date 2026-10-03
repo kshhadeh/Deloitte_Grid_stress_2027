@@ -1,0 +1,52 @@
+stn,lon,lat,alt_m,name,temp_pct,sun_pct,has_temp,has_sun
+209,4.518,52.465,0.0,IJmond,0.0,0.0,False,False
+210,4.43,52.171,-0.2,VALKENBURG VK,,,False,False
+215,4.437,52.141,-1.1,Voorschoten,100.0,100.0,True,True
+225,4.555,52.463,4.4,IJmuiden,0.0,0.0,False,False
+235,4.781,52.928,1.2,De Kooy Airport,100.0,100.0,True,True
+240,4.79,52.318,-3.3,Schiphol Airport,100.0,100.0,True,True
+242,4.921,53.241,10.8,Vlieland Vliehors,100.0,0.0,True,False
+248,5.174,52.634,0.8,Wijdenes,0.0,0.0,False,False
+249,4.979,52.644,-2.4,Berkhout,100.0,100.0,True,True
+251,5.346,53.392,0.7,Hoorn Terschelling,99.9,99.9,True,True
+257,4.603,52.506,8.5,Wijk aan Zee,100.0,100.0,True,True
+258,5.401,52.649,7.3,Houtribdijk,0.0,0.0,False,False
+260,5.18,52.1,1.9,De Bilt,100.0,100.0,True,True
+265,5.274,52.13,13.9,Soesterberg,,,False,False
+267,5.384,52.898,-1.3,Stavoren,100.0,100.0,True,True
+269,5.52,52.458,-3.7,Lelystad Airport,100.0,100.0,True,True
+270,5.752,53.224,1.2,Leeuwarden Airport,100.0,100.0,True,True
+273,5.888,52.703,-3.3,Marknesse,100.0,100.0,True,True
+275,5.873,52.056,48.2,Deelen Airport,100.0,100.0,True,True
+277,6.2,53.413,2.9,Lauwersoog,100.0,100.0,True,True
+278,6.259,52.435,3.6,Heino,100.0,100.0,True,True
+279,6.574,52.75,15.8,Hoogeveen,100.0,100.0,True,True
+280,6.585,53.125,5.2,Groningen Airport Eelde,100.0,100.0,True,True
+283,6.657,52.069,29.1,Hupsel,100.0,100.0,True,True
+285,6.399,53.575,0.0,Huibertgat,0.0,0.0,False,False
+286,7.15,53.196,-0.2,Nieuw Beerta,100.0,100.0,True,True
+290,6.891,52.274,34.8,Twenthe Airport,99.8,99.8,True,True
+308,3.379,51.381,0.0,Cadzand,0.0,0.0,False,False
+310,3.596,51.442,8.0,Vlissingen,100.0,100.0,True,True
+311,3.672,51.379,0.0,Hoofdplaat,,,False,False
+312,3.622,51.768,0.0,Oosterschelde,0.0,0.0,False,False
+313,3.242,51.505,0.0,Vlakte van De Raan,0.0,0.0,False,False
+315,3.998,51.447,0.0,Hansweert,0.0,0.0,False,False
+316,3.694,51.657,0.0,Schaar,0.0,0.0,False,False
+319,3.861,51.226,1.7,Westdorpe,100.0,100.0,True,True
+323,3.884,51.527,1.4,Wilhelminadorp,99.9,99.9,True,True
+324,4.006,51.596,0.0,Stavenisse,0.0,0.0,False,False
+330,4.122,51.992,11.9,Hoek van Holland,100.0,100.0,True,True
+331,4.193,51.48,0.0,Tholen,0.0,0.0,False,False
+340,4.342,51.449,19.2,Woensdrecht Airport,100.0,0.0,True,False
+343,4.313,51.893,3.5,Rotterdam Geulhaven,0.0,0.0,False,False
+344,4.447,51.962,-4.3,Rotterdam Airport,100.0,100.0,True,True
+348,4.926,51.97,-0.7,Cabauw,100.0,100.0,True,True
+350,4.936,51.566,14.9,Gilze-Rijen Airport,100.0,100.0,True,True
+356,5.146,51.859,0.7,Herwijnen,99.9,99.9,True,True
+370,5.377,51.451,22.6,Eindhoven Airport,100.0,100.0,True,True
+375,5.707,51.659,22.0,Volkel,100.0,100.0,True,True
+377,5.763,51.198,30.0,Ell,100.0,100.0,True,True
+380,5.762,50.906,114.3,Maastricht Airport,100.0,100.0,True,True
+391,6.197,51.498,19.5,Arcen,100.0,99.7,True,True
+392,6.056189,51.486836,21.88,Horst,98.7,98.7,True,True
