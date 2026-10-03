@@ -1,0 +1,52 @@
+stn,lon,lat,name,has_q
+209,4.518,52.465,IJmond,False
+210,4.43,52.171,VALKENBURG VK,False
+215,4.437,52.141,Voorschoten,True
+225,4.555,52.463,IJmuiden,False
+235,4.781,52.928,De Kooy Airport,True
+240,4.79,52.318,Schiphol Airport,True
+242,4.921,53.241,Vlieland Vliehors,False
+248,5.174,52.634,Wijdenes,False
+249,4.979,52.644,Berkhout,True
+251,5.346,53.392,Hoorn Terschelling,True
+257,4.603,52.506,Wijk aan Zee,True
+258,5.401,52.649,Houtribdijk,False
+260,5.18,52.1,De Bilt,True
+265,5.274,52.13,Soesterberg,False
+267,5.384,52.898,Stavoren,True
+269,5.52,52.458,Lelystad Airport,True
+270,5.752,53.224,Leeuwarden Airport,True
+273,5.888,52.703,Marknesse,True
+275,5.873,52.056,Deelen Airport,True
+277,6.2,53.413,Lauwersoog,True
+278,6.259,52.435,Heino,True
+279,6.574,52.75,Hoogeveen,True
+280,6.585,53.125,Groningen Airport Eelde,True
+283,6.657,52.069,Hupsel,True
+285,6.399,53.575,Huibertgat,False
+286,7.15,53.196,Nieuw Beerta,True
+290,6.891,52.274,Twenthe Airport,True
+308,3.379,51.381,Cadzand,False
+310,3.596,51.442,Vlissingen,True
+311,3.672,51.379,Hoofdplaat,False
+312,3.622,51.768,Oosterschelde,False
+313,3.242,51.505,Vlakte van De Raan,False
+315,3.998,51.447,Hansweert,False
+316,3.694,51.657,Schaar,False
+319,3.861,51.226,Westdorpe,True
+323,3.884,51.527,Wilhelminadorp,True
+324,4.006,51.596,Stavenisse,False
+330,4.122,51.992,Hoek van Holland,True
+331,4.193,51.48,Tholen,False
+340,4.342,51.449,Woensdrecht Airport,False
+343,4.313,51.893,Rotterdam Geulhaven,False
+344,4.447,51.962,Rotterdam Airport,True
+348,4.926,51.97,Cabauw,True
+350,4.936,51.566,Gilze-Rijen Airport,True
+356,5.146,51.859,Herwijnen,True
+370,5.377,51.451,Eindhoven Airport,True
+375,5.707,51.659,Volkel,True
+377,5.763,51.198,Ell,True
+380,5.762,50.906,Maastricht Airport,True
+391,6.197,51.498,Arcen,True
+392,6.056189,51.486836,Horst,True
