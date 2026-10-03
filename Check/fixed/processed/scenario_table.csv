@@ -1,0 +1,11 @@
+horizon,scenario,transformers_at_or_above_nbl,newly,change_vs_now_pct
+use during 2026,low,530,0,-21.6
+use during 2026,central,698,24,3.3
+use during 2026,high,817,141,20.9
+use during 2026,stresstest,1187,511,75.6
+use during 2026,solar,1279,611,89.2
+use during 2027,low,431,1,-36.2
+use during 2027,central,733,59,8.4
+use during 2027,high,1003,327,48.4
+use during 2027,stresstest,1701,1025,151.6
+use during 2027,solar,2294,1633,239.3

@@ -1,0 +1,80 @@
+Scenarios per year (%): {'low': np.float64(-3.41), 'central': np.float64(0.5), 'high': np.float64(2.93)}
+Step 0 reproduction (original: 671 / 693 / 812): now 671 | central 2026 693 | high 2026 812
+feed-in 2025: 2.74 TWh, linked to a buurt 1.0000
+feed-in 2026: 3.27 TWh, linked to a buurt 1.0000
+Area feed-in growth: raw +19.3% | radiation 2025/2024 1.114 | weather-corrected PV growth +7.2% per year
+
+Transformers: 31304 (was 31125 in the original) | without consumption forecast: 179
+At/above NBL now: 676 (original: 671)
+
+        horizon   scenario  transformers_at_or_above_nbl  newly  change_vs_now_pct
+use during 2026        low                           530      0              -21.6
+use during 2026    central                           698     24                3.3
+use during 2026       high                           817    141               20.9
+use during 2026 stresstest                          1187    511               75.6
+use during 2026      solar                          1279    611               89.2
+use during 2027        low                           431      1              -36.2
+use during 2027    central                           733     59                8.4
+use during 2027       high                          1003    327               48.4
+use during 2027 stresstest                          1701   1025              151.6
+use during 2027      solar                          2294   1633              239.3
+
+Buurten per priority (main answer, 2027):
+priority
+1 Stressed now                    582
+2 Crosses by 2027 (central)        42
+3 Crosses by 2027 (high)          201
+4 Crosses in stress test only     516
+5 No crossing expected           4182
+No transformer data               201
+Buurten added by fix 1: 104 (of which stressed now: 5)
+Solar-sensitivity flag (no crossing on consumption, but crossing if peaks were solar-driven): 643 buurten
+
+Priority 2 – crosses by 2027 (central):
+                           buurtnaam        gemeentenaam  n_new_2027_central  min_headroom_pct  central_2027_pct                                   driver_1
+                       Raadhuisplein        Gooise Meren                 1.0              0.17              0.18 high demand per kW of transformer capacity
+                      Beethovenbuurt           Amsterdam                 1.0              0.18              1.18 high demand per kW of transformer capacity
+                Haarlemmerbuurt-West           Amsterdam                 1.0              0.26              1.11 high demand per kW of transformer capacity
+                            Puiflijk              Druten                 1.0              0.26              2.03 high demand per kW of transformer capacity
+                      Zeeheldenbuurt Alphen aan den Rijn                 1.0              0.26              0.31 high demand per kW of transformer capacity
+               Landelijk gebied-West             Alkmaar                 1.0              0.26              1.04                  high number of businesses
+                     Jacob Geelbuurt           Amsterdam                 1.0              0.33              1.59 high demand per kW of transformer capacity
+                       Wezep-Centrum           Oldebroek                 1.0              0.52              1.36                  high number of businesses
+                    Cremerbuurt-West           Amsterdam                 1.0              0.52              1.38 high demand per kW of transformer capacity
+                              Akkrum          Heerenveen                 1.0              0.52              2.01                  high number of businesses
+                            Silvolde   Oude IJsselstreek                 1.0              0.57              2.17    low transformer capacity per connection
+                      Harselaar-West           Barneveld                 1.0              0.57              1.52                 high demand per connection
+                   Centrum Venhuizen        Drechterland                 1.0              0.65              1.40 high demand per kW of transformer capacity
+                    Balboaplein e.o.           Amsterdam                 1.0              0.72              0.99    low transformer capacity per connection
+                    Centrum Lunteren                 Ede                 1.0              0.78              2.31 high demand per kW of transformer capacity
+                               Aalst          Zaltbommel                 1.0              0.78              1.58 high demand per kW of transformer capacity
+                             De Zilk           Noordwijk                 1.0              0.91              2.12 high demand per kW of transformer capacity
+                    Waardenburg-West         West Betuwe                 1.0              0.91              1.44                             low buurt area
+                Timorpleinbuurt-Zuid           Amsterdam                 1.0              1.04              1.38 high demand per kW of transformer capacity
+                          Buitenpost       Achtkarspelen                 1.0              1.04              1.19    low transformer capacity per connection
+                     Frans Halsbuurt           Amsterdam                 1.0              1.04              1.25 high demand per kW of transformer capacity
+                           Langereis              Opmeer                 1.0              1.14              1.63             low total transformer capacity
+           Hoorn Noord - Buurt 12 03               Hoorn                 1.0              1.42              2.60                             low buurt area
+                            Garderen           Barneveld                 1.0              1.67              2.42 high demand per kW of transformer capacity
+         Bedrijventerrein Wijnbergen          Doetinchem                 1.0              1.70              1.77                  high number of businesses
+                 Buiksloterham-Noord           Amsterdam                 2.0              1.82              5.03                  high number of businesses
+            Amstel III deel C/D-Zuid           Amsterdam                 1.0              1.99              2.23                 high demand per connection
+                              Mûnein   Tytsjerksteradiel                 1.0              2.08              2.38 high demand per kW of transformer capacity
+                           Rozendaal           Rozendaal                 1.0              2.27              2.72 high demand per kW of transformer capacity
+Dronryp Bedrijventerrein de Alde Mar           Waadhoeke                 1.0              2.32              2.39                             low buurt area
+            Industriewijk 't Plaveen              Huizen                 1.0              2.32              3.37                  high number of businesses
+          Bedrijventerrein Kruiswijk      Hollands Kroon                 1.0              2.35              2.92                             low buurt area
+                        Flora Midden            Lelystad                 1.0              2.56              8.30                  high number of businesses
+                        Lemmer-Noord    De Fryske Marren                 1.0              2.92              4.78 high demand per kW of transformer capacity
+               Meteren - De Plantage         West Betuwe                 1.0              3.07             13.43                  high number of businesses
+                    Julianadorp-Oost          Den Helder                 1.0              3.98              7.44           high connections per transformer
+                        Leusinkbrink          Berkelland                 1.0              4.09              4.82 high demand per kW of transformer capacity
+                       Veluwse Poort                 Ede                 1.0              4.55              9.12                  high number of businesses
+            Verspreide huizen Hoeven          Zaltbommel                 1.0              5.21              6.04                  high number of businesses
+                Parijsch Lokkershoek           Culemborg                 1.0              8.24             14.77                  high number of businesses
+                    Groot Holthuizen            Zevenaar                 1.0              8.52             10.15                  high number of businesses
+                           Buitenhof            Lelystad                 2.0             10.00             14.22              high electricity use per home
+
+Peaks in Nov-Feb: 0.9% (these months are 39% of the window); days with >=1 peak: 105 of 311
+geojson buurten: 5724 (final table 5724)
+DONE f09
