@@ -1,0 +1,557 @@
+<title>Liander Grid Stress 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: control-room console — KPI strip, tabbed panels; the map tab pairs a canvas map with a buurt profile rail. */
+:root{
+  --bg:#eef1f3; --panel:#ffffff; --panel-2:#f6f8f9; --ink:#141a20; --ink-2:#47525c; --muted:#6b7680; --rule:#dce2e7;
+  --accent:#1c5cab; --accent-soft:#e3edf9; --focus:#2a78d6;
+  --p1:#971d08; --p2:#bd432f; --p3:#e36650; --p4:#f58d79; --p5:#dfe4e8; --p6:#f6f8f9;
+  --s-blue:#2a78d6; --s-blue-light:#86b6ef; --s-orange:#eb6834; --s-gray:#b6bec6;
+  --stroke:#ffffff;
+  --f-display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1216; --panel:#161b21; --panel-2:#1c2229; --ink:#e8edf1; --ink-2:#b8c2cb; --muted:#8b97a2; --rule:#2a323b;
+  --accent:#6da7ec; --accent-soft:#1d2a3a; --focus:#86b6ef;
+  --p1:#ff9d85; --p2:#f07a64; --p3:#ca5843; --p4:#a83825; --p5:#2c333b; --p6:#1a1f25;
+  --s-blue:#3987e5; --s-blue-light:#1c5cab; --s-orange:#d95926; --s-gray:#4a535c; --stroke:#161b21; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0e1216; --panel:#161b21; --panel-2:#1c2229; --ink:#e8edf1; --ink-2:#b8c2cb; --muted:#8b97a2; --rule:#2a323b;
+  --accent:#6da7ec; --accent-soft:#1d2a3a; --focus:#86b6ef;
+  --p1:#ff9d85; --p2:#f07a64; --p3:#ca5843; --p4:#a83825; --p5:#2c333b; --p6:#1a1f25;
+  --s-blue:#3987e5; --s-blue-light:#1c5cab; --s-orange:#d95926; --s-gray:#4a535c; --stroke:#161b21; color-scheme:dark;}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:18px 40px;display:flex;flex-direction:column;gap:16px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,3.2vw,36px);line-height:1.05;margin:2px 0 0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:600;font-size:21px;margin:0;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:16.5px;margin:0;letter-spacing:.01em}
+.sub{color:var(--ink-2);max-width:70ch;margin:6px 0 0}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.kpi{background:var(--panel);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.kpi .lab{font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+.kpi .val{font-family:var(--f-display);font-weight:700;font-size:32px;line-height:1}
+.kpi .delta{font-family:var(--f-mono);font-size:12px;color:var(--ink-2)}
+.kpi.sens .val{color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--panel-2);color:var(--muted);border:1px solid var(--rule)}
+.notice{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--rule);border-left:4px solid var(--p3);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--ink-2)}
+.notice b{color:var(--ink)}
+nav.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--rule)}
+nav.tabs button{font:600 15px var(--f-display);letter-spacing:.02em;background:none;border:0;border-bottom:3px solid transparent;color:var(--ink-2);padding:8px 12px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible,.chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px;min-width:0}
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+select,input[type=search]{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:5px 8px;max-width:100%}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden;flex-wrap:wrap}
+.seg button{font:500 13px var(--f-body);background:var(--panel);color:var(--ink-2);border:0;border-right:1px solid var(--rule);padding:6px 10px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:4px 9px;border:1px solid var(--rule);border-radius:999px;background:var(--panel);color:var(--ink-2);cursor:pointer;user-select:none}
+.chip[aria-pressed="false"]{opacity:.45}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
+.maplayout{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.mapbox{position:relative;height:min(72vh,720px);min-height:420px;border-radius:8px;overflow:hidden;background:var(--panel-2);border:1px solid var(--rule)}
+.mapbox canvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+.mapbox canvas.drag{cursor:grabbing}
+.mapbtns{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px}
+.mapbtns button{width:32px;height:32px;font:600 17px var(--f-mono);border:1px solid var(--rule);background:var(--panel);color:var(--ink);border-radius:6px;cursor:pointer}
+.legend{position:absolute;left:10px;bottom:10px;background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font-size:12.5px;display:flex;flex-direction:column;gap:4px;max-width:calc(100% - 20px)}
+.legend .row{display:flex;align-items:center;gap:7px}
+.legend .bar{height:10px;width:180px;max-width:100%;border-radius:3px}
+.legend .ends{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--rule);box-shadow:0 4px 16px rgba(0,0,0,.12);border-radius:8px;padding:8px 10px;font-size:13px;max-width:260px;z-index:5}
+.tip .t{font-weight:600}
+.tip .m{color:var(--muted);font-size:12px}
+.profile{display:flex;flex-direction:column;gap:14px;max-height:none}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--rule)}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kv div{background:var(--panel-2);border-radius:7px;padding:8px 10px;min-width:0}
+.kv .l{font-size:12px;color:var(--muted)}
+.kv .v{font-family:var(--f-mono);font-size:16px;font-variant-numeric:tabular-nums}
+.drivers{margin:0;padding-left:18px;color:var(--ink-2);font-size:14px}
+.info{font-size:13px;color:var(--ink-2);background:var(--panel-2);border-radius:7px;padding:8px 10px}
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-weight:600;font-size:12px;color:var(--muted);background:var(--panel-2);position:sticky;top:0;cursor:pointer}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--accent-soft)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.cap{font-size:13px;color:var(--muted);margin:6px 0 0;max-width:75ch}
+svg text{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+svg .lbl{fill:var(--ink-2);font-family:var(--f-body);font-size:12.5px}
+svg .lblb{fill:var(--ink);font-family:var(--f-body);font-size:12.5px;font-weight:600}
+svg .grid{stroke:var(--rule);stroke-width:1}
+svg .axis{stroke:var(--muted);stroke-width:1}
+.chart{position:relative}
+.chart .tip{display:none}
+.lg{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--ink-2);margin:6px 0}
+.lg span{display:inline-flex;align-items:center;gap:6px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.hd{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.more{font:500 13px var(--f-body);background:var(--panel);border:1px solid var(--rule);color:var(--ink);padding:6px 12px;border-radius:6px;cursor:pointer}
+@media (max-width:1100px){.maplayout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi.sens{grid-column:1/-1}.grid2,.grid3{grid-template-columns:1fr}.mapbox{height:60vh}.kpi .val{font-size:26px}.legend .bar{width:130px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Powering Ahead · Deloitte capstone · Liander service area</div>
+      <h1>Where the low-voltage grid runs out of headroom by 2027</h1>
+      <p class="sub">31,304 neighbourhood transformers (0.4 kV) compared with their netbewust-laden (NBL) limit, projected two years past the 2025 peak measurements. Data: Liander, CBS, KNMI, ENTSO-E.</p>
+    </div>
+  </header>
+
+  <section class="kpis" aria-label="Key figures">
+    <div class="kpi"><span class="lab">Transformers at or above the NBL limit today</span><span class="val num" id="k-now"></span><span class="delta">peaks measured Sep 2024 – Jul 2025</span></div>
+    <div class="kpi"><span class="lab">Projected 2027 · central scenario</span><span class="val num" id="k-c"></span><span class="delta" id="k-cd"></span></div>
+    <div class="kpi"><span class="lab">Projected 2027 · high-demand scenario</span><span class="val num" id="k-h"></span><span class="delta" id="k-hd"></span></div>
+    <div class="kpi"><span class="lab">Buurten stressed now or crossing by 2027 (central)</span><span class="val num" id="k-b"></span><span class="delta" id="k-bd"></span></div>
+    <div class="kpi sens"><span class="lab">If peaks were solar-driven <span class="tag">sensitivity</span></span><span class="val num" id="k-s"></span><span class="delta" id="k-sd"></span></div>
+  </section>
+
+  <div class="notice" role="note"><span aria-hidden="true">⚠</span><div><b>Read with care:</b> almost no peaks were recorded between mid-November 2024 and February 2025, so winter evening peaks (heat pumps, EV charging) are largely missing and stress is probably understated for consumption-heavy transformers. See <a href="#context" data-goto="context">Context &amp; data quality</a>.</div></div>
+
+  <nav class="tabs" role="tablist" aria-label="Dashboard sections">
+    <button role="tab" id="t-map" aria-selected="true" data-tab="map">Risk map</button>
+    <button role="tab" id="t-list" aria-selected="false" data-tab="list">Priority list</button>
+    <button role="tab" id="t-scen" aria-selected="false" data-tab="scen">Scenarios</button>
+    <button role="tab" id="t-drv" aria-selected="false" data-tab="drv">Drivers</button>
+    <button role="tab" id="t-ctx" aria-selected="false" data-tab="context">Context &amp; data quality</button>
+  </nav>
+
+  <!-- shared filters -->
+  <div class="panel controls" id="filters">
+    <label class="ctl" for="f-gm">Municipality <select id="f-gm"><option value="">All municipalities</option></select></label>
+    <label class="ctl" for="f-q">Find buurt <input type="search" id="f-q" placeholder="name or BU-code" list="buurtlist" autocomplete="off"></label>
+    <datalist id="buurtlist"></datalist>
+    <div class="ctl" id="f-prio" role="group" aria-label="Priority levels"></div>
+    <label class="ctl"><input type="checkbox" id="f-solar"> only solar-sensitivity flag</label>
+    <span class="ctl num" id="f-count"></span>
+  </div>
+
+  <!-- MAP -->
+  <section id="p-map" role="tabpanel" aria-labelledby="t-map">
+    <div class="maplayout">
+      <div class="stack" style="gap:10px">
+        <div class="controls">
+          <div class="seg" id="layer" role="group" aria-label="Colour the map by"></div>
+        </div>
+        <div class="mapbox" id="mapbox">
+          <canvas id="map" aria-label="Map of buurten in the Liander area coloured by the selected measure" role="img"></canvas>
+          <div class="mapbtns"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zreset" aria-label="Reset view" style="font-size:12px">⟲</button></div>
+          <div class="legend" id="legend"></div>
+          <div class="tip" id="maptip" hidden></div>
+        </div>
+        <p class="cap">Scroll or pinch to zoom, drag to pan, click a buurt to open its profile. Faded buurten are outside the current filters.</p>
+      </div>
+      <aside class="panel profile" id="profile" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <!-- LIST -->
+  <section id="p-list" role="tabpanel" aria-labelledby="t-list" hidden>
+    <div class="panel">
+      <div class="hd"><h2>Buurten to act on first</h2><span class="cap" style="margin:0">Sorted by priority, then least headroom. Click a row to see it on the map.</span></div>
+      <div class="tbl"><table id="listtbl"><thead></thead><tbody></tbody></table></div>
+      <div style="margin-top:10px;display:flex;gap:10px;align-items:center"><button class="more" id="listmore">Show 100 more</button><span class="cap num" id="listinfo" style="margin:0"></span></div>
+    </div>
+  </section>
+
+  <!-- SCENARIOS -->
+  <section id="p-scen" role="tabpanel" aria-labelledby="t-scen" hidden>
+    <div class="grid2">
+      <div class="panel"><h2>Transformers at or above the NBL limit</h2>
+        <div class="lg" id="scen-lg"></div>
+        <div class="chart" id="scen-chart"></div>
+        <p class="cap">Growth in small-connection use is applied to each measured peak. National scenarios: low = energy-crisis year (−3.4%/yr), central = median year (+0.5%/yr), high = rebound year 2025 (+2.9%/yr); the stress test adds the local model's 90th-percentile error. The solar row assumes every peak grows with installed PV (+7%/yr after weather correction) and is an upper bound, not a forecast.</p>
+      </div>
+      <div class="panel"><h2>How much buffer is left?</h2>
+        <p class="cap" style="margin-top:2px">Transformers by headroom below their NBL limit, and how many of them cross by 2027.</p>
+        <div class="tbl" style="margin-top:10px"><table id="headtbl"></table></div>
+        <p class="cap">Peaks and limits are whole kW: less than 1% headroom is 1–4 kW on a typical 384 kW limit, within measurement rounding. Read these as "no buffer left" rather than as an exact forecast.</p>
+        <h3 style="margin-top:14px">Area demand (small connections)</h3>
+        <div class="kv" id="area-kv" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRIVERS -->
+  <section id="p-drv" role="tabpanel" aria-labelledby="t-drv" hidden>
+    <div class="grid2">
+      <div class="panel"><h2>What explains grid utilisation</h2><p class="cap" style="margin-top:2px">LightGBM regression on peak ÷ capacity per buurt · R² 0.50 on municipalities the model never saw · mean |SHAP|</p>
+        <div class="lg" id="shap-lg"></div><div class="chart" id="shap-u"></div></div>
+      <div class="panel"><h2>What explains the stress label</h2><p class="cap" style="margin-top:2px">LightGBM classification "≥ 1 transformer above NBL" · ROC-AUC 0.75 · partly a buurt-size effect</p>
+        <div class="lg" id="shap-lg2"></div><div class="chart" id="shap-s"></div></div>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="panel"><h2>Demand relative to capacity is the key relationship</h2>
+        <div class="lg"><span><i class="sw" style="background:var(--s-orange)"></i>≥ 1 transformer above NBL</span><span><i class="sw" style="background:var(--s-gray)"></i>none above NBL</span></div>
+        <div class="chart" id="scatter"></div>
+        <p class="cap">Each dot is a buurt. Utilisation rises with yearly small-connection demand per kW of transformer capacity (log scale).</p></div>
+      <div class="panel"><h2>Most common first driver per buurt</h2><div class="chart" id="drv1"></div>
+        <p class="cap">SHAP shows associations, not causes. Correlated features share credit, so read groups of drivers rather than single signs.</p></div>
+    </div>
+  </section>
+
+  <!-- CONTEXT -->
+  <section id="p-context" role="tabpanel" aria-labelledby="t-ctx" hidden>
+    <div class="panel">
+      <h2>Measurement coverage: when were the transformer peaks recorded?</h2>
+      <p class="cap" id="cov-cap"></p>
+      <div class="chart" id="cov-chart"></div>
+      <div class="chart" id="cov-rad" style="margin-top:4px"></div>
+    </div>
+    <div class="grid3" style="margin-top:16px">
+      <div class="panel"><h3>National electricity demand (ENTSO-E)</h3><p class="cap" style="margin-top:2px">TWh per complete year</p><div class="chart" id="nat-e"></div></div>
+      <div class="panel"><h3>National peak load</h3><p class="cap" style="margin-top:2px">Highest quarter-hour per year, GW · 2026 partial year</p><div class="chart" id="nat-p"></div></div>
+      <div class="panel"><h3>Cars that charge from the grid</h3><p class="cap" style="margin-top:2px">% of all passenger cars, 1 January (CBS/RDW, national)</p>
+        <div class="lg"><span><i class="sw" style="background:var(--s-blue)"></i>Fully electric</span><span><i class="sw" style="background:var(--s-orange)"></i>Plug-in hybrid</span></div><div class="chart" id="nat-ev"></div></div>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="panel"><h3>Average national load by month and hour, 2019–2025 (MW)</h3><div class="chart" id="nat-heat" style="margin-top:8px"></div>
+        <p class="cap">National peaks sit on winter evenings (17:00–18:00). The local transformer data barely covers that period.</p></div>
+      <div class="panel"><h3>Method and limitations</h3>
+        <ul class="drivers" style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+          <li>Demand = Liander standard yearly consumption (SJV) for small connections; Liander changed its definition in 2025, so 2024→2025 is not a growth pair.</li>
+          <li>Projection: measured transformer peak × buurt growth factor; two years ahead because the peaks are from 2025.</li>
+          <li>Peaks mix consumption and solar feed-in. Buurt utilisation follows consumption per kW (Spearman 0.60) much more than feed-in per kW (0.27), so consumption growth is the central case.</li>
+          <li>Feed-in grew from 2.74 to 3.27 TWh (+19%); about +7% per year after removing the sunnier 2025.</li>
+          <li>104 buurten have transformers but no small connections (business or recreation areas); they use national growth only.</li>
+          <li>No local EV data; the stress label partly reflects buurt size; CBS privacy hides some values in small buurten.</li>
+        </ul></div>
+    </div>
+  </section>
+</div>
+
+<script type="application/json" id="data">/*__DATA__*/</script>
+<script>
+(function(){
+"use strict";
+const D = JSON.parse(document.getElementById("data").textContent);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt = (v,d=0) => v==null||isNaN(v) ? "–" : Number(v).toLocaleString("en-US",{maximumFractionDigits:d,minimumFractionDigits:d});
+const pct = (v,d=1) => v==null ? "–" : (v>0?"+":"")+fmt(v,d)+"%";
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = id => document.getElementById(id);
+
+// ---- buurt records
+const F = ["code","name","gm","prio","risk","utilp","utilm","ntr","nnow","n27c","n27h","n27s","head","g27","p10","p90","kwh25","kwh27","fshare","pvg","solar","nocons","lowrel","drv","tier","conn","trend","g26","f25","f26"];
+const B = D.B.map(r => { const o={}; F.forEach((k,i)=>o[k]=r[i]); o.gmn = D.gm[o.gm]; return o; });
+const byCode = new Map(B.map(b=>[b.code,b]));
+const PR = {1:"Stressed now",2:"Crosses by 2027 (central)",3:"Crosses by 2027 (high)",4:"Crosses in stress test only",5:"No crossing expected",6:"No transformer data"};
+const pcol = p => css("--p"+p);
+
+// ---- KPIs
+const sc = (h,s) => D.sc.find(r=>r.horizon===h && r.scenario===s);
+const now = B.reduce((a,b)=>a+b.nnow,0);
+const c27 = sc("use during 2027","central"), h27 = sc("use during 2027","high"), s27 = sc("use during 2027","solar");
+$("k-now").textContent = fmt(now);
+$("k-c").textContent = fmt(c27.transformers_at_or_above_nbl); $("k-cd").textContent = pct(c27.change_vs_now_pct)+" vs today · "+fmt(c27.newly)+" newly";
+$("k-h").textContent = fmt(h27.transformers_at_or_above_nbl); $("k-hd").textContent = pct(h27.change_vs_now_pct)+" vs today · "+fmt(h27.newly)+" newly";
+const nb1 = B.filter(b=>b.prio===1).length, nb2 = B.filter(b=>b.prio===2).length;
+$("k-b").textContent = fmt(nb1+nb2); $("k-bd").textContent = fmt(nb1)+" stressed now + "+fmt(nb2)+" crossing";
+$("k-s").textContent = fmt(s27.transformers_at_or_above_nbl); $("k-sd").textContent = pct(s27.change_vs_now_pct)+" vs today · upper bound";
+
+// ---- filters
+const state = {gm:"", prios:new Set([1,2,3,4,5,6]), solar:false, layer:"prio", sel:null, tab:"map", listN:100, sort:null};
+const gmSel = $("f-gm");
+D.gm.forEach((g,i)=>{ if(g==="?")return; const o=document.createElement("option"); o.value=i; o.textContent=g; gmSel.appendChild(o); });
+const dl = $("buurtlist");
+B.forEach(b=>{ const o=document.createElement("option"); o.value=b.name+" · "+b.gmn+" ("+b.code+")"; dl.appendChild(o); });
+const pg = $("f-prio");
+[1,2,3,4,5,6].forEach(p=>{ const c=document.createElement("button"); c.className="chip"; c.type="button"; c.setAttribute("aria-pressed","true"); c.dataset.p=p;
+  c.innerHTML='<i class="sw" style="background:var(--p'+p+');'+(p===6?'border:1px solid var(--rule)':'')+'"></i>'+PR[p]; pg.appendChild(c);
+  c.addEventListener("click",()=>{ const on=state.prios.has(p); on?state.prios.delete(p):state.prios.add(p); c.setAttribute("aria-pressed",String(!on)); refresh(); }); });
+gmSel.addEventListener("change",()=>{ state.gm=gmSel.value; refresh(true); });
+$("f-solar").addEventListener("change",e=>{ state.solar=e.target.checked; refresh(); });
+$("f-q").addEventListener("change",e=>{ const v=e.target.value; const m=v.match(/\((BU[0-9A-Z]+)\)$/); let b=m?byCode.get(m[1]):null;
+  if(!b){ const q=v.trim().toLowerCase(); b=B.find(x=>x.code.toLowerCase()===q)||B.find(x=>x.name.toLowerCase()===q)||B.find(x=>x.name.toLowerCase().includes(q)); }
+  if(b){ select(b.code,true); setTab("map"); } });
+const visible = b => (state.gm==="" || String(b.gm)===state.gm) && state.prios.has(b.prio) && (!state.solar || b.solar);
+function refresh(zoomToGm){ const n=B.filter(visible).length; $("f-count").textContent=fmt(n)+" of "+fmt(B.length)+" buurten";
+  if(zoomToGm) fitTo(state.gm===""?null:B.filter(b=>String(b.gm)===state.gm).map(b=>b.code));
+  drawMap(); renderList(); }
+
+// ---- tabs
+function setTab(t){ state.tab=t; document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===t)));
+  ["map","list","scen","drv","context"].forEach(k=>$("p-"+k).hidden = k!==t);
+  $("filters").hidden = !(t==="map"||t==="list");
+  if(t==="map"){ resize(); }
+  if(!rendered[t]){ rendered[t]=true; ({scen:renderScen,drv:renderDrv,context:renderCtx})[t]?.(); }
+  try{ localStorage.setItem("gs-tab",t); }catch(e){} }
+const rendered={map:true,list:true};
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+document.querySelectorAll("[data-goto]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault(); setTab(a.dataset.goto);}));
+
+// ---- colour scales
+function hex2rgb(h){ h=h.replace("#",""); return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16)); }
+function lerpHex(stops,t){ t=Math.max(0,Math.min(1,t)); const n=stops.length-1, i=Math.min(n-1,Math.floor(t*n)), f=t*n-i; const a=hex2rgb(stops[i]), b=hex2rgb(stops[i+1]);
+  return "rgb("+a.map((v,k)=>Math.round(v+(b[k]-v)*f)).join(",")+")"; }
+const dark = () => getComputedStyle(document.documentElement).colorScheme.includes("dark") || (css("--bg")==="#0e1216");
+const BLUE_L=["#cde2fb","#9ec5f4","#6da7ec","#3987e5","#256abf","#184f95","#0d366b"];
+const BLUE_D=["#1a2a3d","#184f95","#256abf","#3987e5","#6da7ec","#9ec5f4","#cde2fb"];
+const AMB_L=["#fbecc8","#f6d388","#efb43f","#d9900a","#a86a00","#734700"];
+const AMB_D=["#2e2512","#5e4410","#9a6a0a","#d9900a","#efb43f","#f6d388"];
+const DIV_L=["#184f95","#6da7ec","#cde2fb","#f0efec","#f7c3a8","#eb6834","#a8401a"];
+const DIV_D=["#9ec5f4","#3987e5","#1c3557","#383835","#5a2d1a","#d95926","#f4a37c"];
+const LAYERS = {
+  prio:{label:"Priority", get:b=>b.prio, color:v=>pcol(v)},
+  risk:{label:"Stress risk (model)", get:b=>b.risk, dom:[0,0.6], ramp:()=>dark()?BLUE_D:BLUE_L, fmt:v=>fmt(v*100,0)+"%"},
+  util:{label:"Predicted utilisation", get:b=>b.utilp, dom:[0.2,0.8], ramp:()=>dark()?BLUE_D:BLUE_L, fmt:v=>fmt(v*100,0)+"%"},
+  g27:{label:"Demand growth to 2027", get:b=>b.g27, dom:[-6,6], ramp:()=>dark()?DIV_D:DIV_L, fmt:v=>pct(v,0), div:true},
+  fshare:{label:"Solar share of electricity", get:b=>b.fshare, dom:[0,45], ramp:()=>dark()?AMB_D:AMB_L, fmt:v=>fmt(v,0)+"%"},
+};
+function colorOf(b){ const L=LAYERS[state.layer]; if(state.layer==="prio") return pcol(b.prio); const v=L.get(b); if(v==null) return css("--p6");
+  return lerpHex(L.ramp(),(v-L.dom[0])/(L.dom[1]-L.dom[0])); }
+const segL=$("layer");
+Object.entries(LAYERS).forEach(([k,L])=>{ const b=document.createElement("button"); b.type="button"; b.textContent=L.label; b.setAttribute("aria-pressed",String(k===state.layer));
+  b.addEventListener("click",()=>{ state.layer=k; segL.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); drawMap(); drawLegend(); }); segL.appendChild(b); });
+function drawLegend(){ const L=LAYERS[state.layer], lg=$("legend");
+  if(state.layer==="prio"){ lg.innerHTML=[1,2,3,4,5,6].map(p=>'<div class="row"><i class="sw" style="background:var(--p'+p+');'+(p===6?'border:1px solid var(--rule)':'')+'"></i>'+PR[p]+'</div>').join(""); return; }
+  const r=L.ramp(); lg.innerHTML='<div style="font-weight:600">'+L.label+'</div><div class="bar" style="background:linear-gradient(90deg,'+r.join(",")+')"></div><div class="ends"><span>'+L.fmt(L.dom[0])+(L.div?"":" or less")+'</span>'+(L.div?'<span>0%</span>':'')+'<span>'+L.fmt(L.dom[1])+'+</span></div><div class="row" style="color:var(--muted)"><i class="sw" style="background:var(--p6);border:1px solid var(--rule)"></i>no value</div>'; }
+
+// ---- map geometry
+const canvas=$("map"), ctx=canvas.getContext("2d"), box=$("mapbox");
+const pick=document.createElement("canvas"), pctx=pick.getContext("2d",{willReadFrequently:true});
+const paths=new Map(); let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9; const bbox=new Map();
+Object.entries(D.shapes).forEach(([code,rings])=>{ const p=new Path2D(); let bx0=1e9,by0=1e9,bx1=-1e9,by1=-1e9;
+  rings.forEach(r=>{ let x=r[0],y=r[1]; p.moveTo(x,y); for(let i=2;i<r.length;i+=2){ x+=r[i]; y+=r[i+1]; p.lineTo(x,y); if(x<bx0)bx0=x; if(x>bx1)bx1=x; if(y<by0)by0=y; if(y>by1)by1=y;} p.closePath(); });
+  paths.set(code,p); bbox.set(code,[bx0,by0,bx1,by1]); minX=Math.min(minX,bx0); minY=Math.min(minY,by0); maxX=Math.max(maxX,bx1); maxY=Math.max(maxY,by1); });
+const ids=[...paths.keys()]; const idColor=new Map(), colorId=new Map();
+ids.forEach((c,i)=>{ const n=i+1, col="rgb("+(n&255)+","+((n>>8)&255)+","+((n>>16)&255)+")"; idColor.set(c,col); colorId.set(n,c); });
+let W=0,H=0,dpr=1, view={k:1,x:0,y:0}, pickDirty=true;
+function fitTo(codes){ let x0=minX,y0=minY,x1=maxX,y1=maxY;
+  if(codes&&codes.length){ x0=y0=1e9; x1=y1=-1e9; codes.forEach(c=>{ const b=bbox.get(c); if(!b)return; x0=Math.min(x0,b[0]); y0=Math.min(y0,b[1]); x1=Math.max(x1,b[2]); y1=Math.max(y1,b[3]); }); }
+  const pad=24, k=Math.min((W-2*pad)/(x1-x0||1),(H-2*pad)/(y1-y0||1)); view={k, x:(W-(x1-x0)*k)/2-x0*k, y:(H-(y1-y0)*k)/2-y0*k}; pickDirty=true; }
+function resize(){ const r=box.getBoundingClientRect(); if(!r.width) return; const first=!W; dpr=window.devicePixelRatio||1; W=r.width; H=r.height;
+  canvas.width=W*dpr; canvas.height=H*dpr; pick.width=W; pick.height=H; if(first) fitTo(null); pickDirty=true; drawMap(); }
+function drawMap(){ if(!W) return; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle=css("--panel-2"); ctx.fillRect(0,0,W,H);
+  ctx.setTransform(dpr*view.k,0,0,dpr*view.k,dpr*view.x,dpr*view.y);
+  const stroke=css("--stroke"), faded=css("--p6"); ctx.lineWidth=Math.min(1.2,0.6/view.k*2)/1; ctx.lineJoin="round";
+  ctx.lineWidth = 0.8/view.k;
+  for(const b of B){ const p=paths.get(b.code); if(!p) continue; const vis=visible(b);
+    ctx.fillStyle= vis ? colorOf(b) : faded; ctx.fill(p); ctx.strokeStyle=stroke; ctx.stroke(p); }
+  if(state.sel && paths.get(state.sel)){ ctx.lineWidth=2.6/view.k; ctx.strokeStyle=css("--ink"); ctx.stroke(paths.get(state.sel)); }
+  pickDirty=true; }
+function drawPick(){ pctx.setTransform(1,0,0,1,0,0); pctx.clearRect(0,0,W,H); pctx.setTransform(view.k,0,0,view.k,view.x,view.y); pctx.imageSmoothingEnabled=false;
+  for(const b of B){ const p=paths.get(b.code); if(!p) continue; pctx.fillStyle=idColor.get(b.code); pctx.fill(p); } pickDirty=false; }
+function codeAt(x,y){ if(pickDirty) drawPick(); const d=pctx.getImageData(Math.round(x),Math.round(y),1,1).data; if(d[3]<255) return null; return colorId.get(d[0]+(d[1]<<8)+(d[2]<<16))||null; }
+// interaction
+let drag=null, moved=false; const tip=$("maptip");
+canvas.addEventListener("pointerdown",e=>{ drag={x:e.clientX,y:e.clientY,vx:view.x,vy:view.y}; moved=false; canvas.setPointerCapture(e.pointerId); canvas.classList.add("drag"); });
+canvas.addEventListener("pointermove",e=>{ const r=canvas.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
+  if(drag){ const dx=e.clientX-drag.x, dy=e.clientY-drag.y; if(Math.abs(dx)+Math.abs(dy)>3) moved=true; view.x=drag.vx+dx; view.y=drag.vy+dy; tip.hidden=true; requestDraw(); return; }
+  const c=codeAt(x,y); if(!c){ tip.hidden=true; return; } const b=byCode.get(c); if(!b){tip.hidden=true;return;}
+  const L=LAYERS[state.layer];
+  tip.innerHTML='<div class="t">'+esc(b.name)+'</div><div class="m">'+esc(b.gmn)+' · '+b.code+'</div><div style="margin-top:4px"><i class="sw" style="background:var(--p'+b.prio+')"></i> '+PR[b.prio]+'</div>'+
+    (state.layer!=="prio"?'<div class="num" style="margin-top:2px">'+L.label+': '+(L.get(b)==null?"–":L.fmt(L.get(b)))+'</div>':'')+
+    '<div class="m num" style="margin-top:2px">'+b.ntr+' transformers · '+b.nnow+' at limit now · '+b.n27c+' crossing by 2027</div>';
+  tip.hidden=false; const tw=tip.offsetWidth, th=tip.offsetHeight; tip.style.left=Math.min(W-tw-8,x+14)+"px"; tip.style.top=Math.max(8,Math.min(H-th-8,y+14))+"px"; });
+canvas.addEventListener("pointerup",e=>{ canvas.classList.remove("drag"); const wasDrag=moved; drag=null; if(!wasDrag){ const r=canvas.getBoundingClientRect(); const c=codeAt(e.clientX-r.left,e.clientY-r.top); if(c) select(c,false); } });
+canvas.addEventListener("pointerleave",()=>{ tip.hidden=true; });
+canvas.addEventListener("wheel",e=>{ e.preventDefault(); const r=canvas.getBoundingClientRect(); zoomAt(e.clientX-r.left,e.clientY-r.top,Math.exp(-e.deltaY*0.0015)); },{passive:false});
+function zoomAt(x,y,f){ const k=Math.max(0.02,Math.min(view.k*f,40)); f=k/view.k; view.x=x-(x-view.x)*f; view.y=y-(y-view.y)*f; view.k=k; requestDraw(); }
+$("zin").onclick=()=>zoomAt(W/2,H/2,1.6); $("zout").onclick=()=>zoomAt(W/2,H/2,1/1.6); $("zreset").onclick=()=>{ fitTo(null); drawMap(); };
+let raf=0; function requestDraw(){ if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; drawMap(); }); }
+new ResizeObserver(()=>{ if(state.tab==="map") resize(); }).observe(box);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{ drawMap(); drawLegend(); });
+new MutationObserver(()=>{ drawMap(); drawLegend(); }).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+// ---- profile
+function select(code, zoom){ state.sel=code; const b=byCode.get(code); if(zoom && bbox.get(code)){ const bb=bbox.get(code); const k=Math.min(W/((bb[2]-bb[0])*6||1),H/((bb[3]-bb[1])*6||1),20);
+    view.k=k; view.x=W/2-(bb[0]+bb[2])/2*k; view.y=H/2-(bb[1]+bb[3])/2*k; }
+  drawMap(); renderProfile(b); try{ localStorage.setItem("gs-sel",code);}catch(e){} }
+function renderProfile(b){ const el=$("profile");
+  if(!b){ el.innerHTML='<h2>Buurt profile</h2><p class="cap">Click a buurt on the map, search for one above, or pick a row in the priority list.</p>'; return; }
+  const trs=(D.T[b.code]||[]).slice().sort((a,c)=>a[4]-c[4]);
+  const drv=b.drv.filter(i=>i>=0).map(i=>D.drv[i]);
+  let notes="";
+  if(b.nocons) notes+='<div class="info">No small-connection consumption here (business or recreation area). The projection uses national growth only and there is no stress-model score.</div>';
+  else if(b.lowrel) notes+='<div class="info">Fewer than 50 connections: the demand forecast for this buurt has low reliability.</div>';
+  if(b.solar) notes+='<div class="info">Solar sensitivity: no crossing on consumption growth, but a transformer here would cross its NBL limit by 2027 if the peaks were driven by solar feed-in.</div>';
+  el.innerHTML='<div><div class="eyebrow">'+esc(b.gmn)+' · '+b.code+'</div><h2 style="margin-top:2px">'+esc(b.name)+'</h2>'+
+    '<div style="margin-top:8px"><span class="pill"><i class="sw" style="background:var(--p'+b.prio+')"></i>'+PR[b.prio]+'</span></div></div>'+notes+
+    '<div class="kv">'+
+      kv("Transformers at/above NBL now", b.ntr? b.nnow+" of "+b.ntr : "–")+
+      kv("Crossing by 2027 (central / high)", b.ntr? b.n27c+" / "+b.n27h : "–")+
+      kv("Least headroom to NBL", b.head==null?"–":fmt(b.head,1)+"%")+
+      kv("Stress risk (model)", b.risk==null?"–":fmt(b.risk*100,0)+"%"+(b.tier?" · "+b.tier:""))+
+      kv("Measured utilisation", b.utilm==null?"–":fmt(b.utilm*100,0)+"%")+
+      kv("Small connections", fmt(b.conn))+
+    '</div>'+
+    '<div><h3>Electricity use, MWh per year</h3><div class="lg"><span><i class="sw" style="background:var(--s-gray)"></i>use 2018–2023 (old definition)</span><span><i class="sw" style="background:var(--ink-2)"></i>use 2024–2025 (new definition)</span><span><i class="sw" style="background:var(--s-orange)"></i>forecast to 2027, 80% range</span></div><div class="chart" id="pf-trend"></div>'+
+      (b.kwh25!=null?'<p class="cap num" style="margin-top:0">To 2027: '+pct(b.g27)+' (80% range '+pct(b.p10)+' to '+pct(b.p90)+')'+(b.f26!=null?' · solar feed-in '+fmt(b.f25/1000)+' → '+fmt(b.f26/1000)+' MWh, PV growth '+pct(b.pvg)+'/yr':'')+'</p>':'')+'</div>'+
+    (drv.length?'<div><h3>Main drivers of utilisation here</h3><ul class="drivers" style="margin-top:6px">'+drv.map(d=>'<li>'+esc(d)+'</li>').join("")+'</ul></div>':'')+
+    (trs.length?'<div><h3>Transformers</h3><div class="tbl" style="margin-top:6px;max-height:260px;overflow:auto"><table><thead><tr><th>ID</th><th class="n">Peak kW</th><th class="n">NBL kW</th><th class="n">Headroom</th><th>Peak day</th><th>Status</th></tr></thead><tbody>'+
+      trs.map(t=>'<tr style="cursor:default"><td class="num" style="font-size:12px">'+t[0]+'</td><td class="n">'+t[1]+'</td><td class="n">'+t[3]+'</td><td class="n">'+fmt(t[4],1)+'%</td><td class="num" style="font-size:12px">'+t[5]+'</td><td>'+trStatus(t)+'</td></tr>').join("")+'</tbody></table></div></div>':'');
+  if(b.trend||b.kwh25!=null) trendChart($("pf-trend"),b); }
+const kv=(l,v)=>'<div><div class="l">'+l+'</div><div class="v">'+v+'</div></div>';
+function trStatus(t){ if(t[6]) return '<span class="pill" style="font-size:11.5px"><i class="sw" style="background:var(--p1)"></i>at limit</span>';
+  if(t[7]) return '<span class="pill" style="font-size:11.5px"><i class="sw" style="background:var(--p2)"></i>2027 central</span>';
+  if(t[8]) return '<span class="pill" style="font-size:11.5px"><i class="sw" style="background:var(--p3)"></i>2027 high</span>';
+  if(t[9]) return '<span class="pill" style="font-size:11.5px;color:var(--muted)">solar only</span>'; return '<span style="color:var(--muted)">ok</span>'; }
+
+// ---- SVG helpers
+const NS="http://www.w3.org/2000/svg";
+function svg(el,w,h){ el.innerHTML=""; const s=document.createElementNS(NS,"svg"); s.setAttribute("viewBox","0 0 "+w+" "+h); s.setAttribute("width","100%"); s.style.display="block"; s.setAttribute("role","img"); el.appendChild(s); return s; }
+function add(p,tag,attrs,text){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(text!=null) e.textContent=text; p.appendChild(e); return e; }
+function niceTicks(lo,hi,n=4){ const span=hi-lo||1, step0=span/n, mag=Math.pow(10,Math.floor(Math.log10(step0))), err=step0/mag; const step=(err>=7.5?10:err>=3.5?5:err>=1.5?2:1)*mag;
+  const t=[]; for(let v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) t.push(+v.toFixed(10)); return t; }
+function chartTip(el){ let t=el.querySelector(".tip"); if(!t){ t=document.createElement("div"); t.className="tip"; el.appendChild(t);} return t; }
+function showTip(el,html,evt){ const t=chartTip(el); t.innerHTML=html; t.style.display="block"; const r=el.getBoundingClientRect(); const x=evt.clientX-r.left, y=evt.clientY-r.top;
+  t.style.left=Math.max(0,Math.min(r.width-t.offsetWidth-4,x+12))+"px"; t.style.top=Math.max(0,y-t.offsetHeight-10)+"px"; }
+function hideTip(el){ const t=el.querySelector(".tip"); if(t) t.style.display="none"; }
+
+function trendChart(el,b){ const w=380,h=190,m={l:44,r:12,t:10,b:24}; const s=svg(el,w,h);
+  const pts=[]; if(b.trend) b.trend.forEach((v,i)=>{ if(v!=null) pts.push({x:2018+i,y:v/1000,s:i<6?0:1}); });
+  const fc=b.kwh25!=null?[{x:2025,y:b.kwh25/1000,lo:b.kwh25/1000,hi:b.kwh25/1000},{x:2026,y:b.kwh25/1000*(1+(b.g26||0)/100),lo:null,hi:null},{x:2027,y:b.kwh27/1000,lo:b.kwh25/1000*(1+b.p10/100),hi:b.kwh25/1000*(1+b.p90/100)}]:[];
+  if(fc.length){ fc[1].lo=(fc[0].lo+fc[2].lo)/2; fc[1].hi=(fc[0].hi+fc[2].hi)/2; }
+  const all=pts.map(p=>p.y).concat(fc.flatMap(f=>[f.lo,f.hi,f.y])).filter(v=>v!=null); if(!all.length){ el.innerHTML=""; return; }
+  let lo=Math.min(...all), hi=Math.max(...all); const padv=(hi-lo)*0.15||hi*0.1||1; lo=Math.max(0,lo-padv); hi=hi+padv;
+  const X=x=>m.l+(x-2018)/(2027-2018)*(w-m.l-m.r), Y=v=>m.t+(1-(v-lo)/(hi-lo))*(h-m.t-m.b);
+  niceTicks(lo,hi,4).forEach(t=>{ add(s,"line",{x1:m.l,x2:w-m.r,y1:Y(t),y2:Y(t),class:"grid"}); add(s,"text",{x:m.l-6,y:Y(t)+4,"text-anchor":"end"},fmt(t)); });
+  for(let y=2019;y<=2027;y+=2) add(s,"text",{x:X(y),y:h-6,"text-anchor":"middle"},y);
+  add(s,"line",{x1:X(2023.5),x2:X(2023.5),y1:m.t,y2:h-m.b,stroke:"var(--rule)","stroke-width":1});
+  if(fc.length){ const band=fc.map(f=>X(f.x)+","+Y(f.hi)).join(" ")+" "+fc.slice().reverse().map(f=>X(f.x)+","+Y(f.lo)).join(" ");
+    add(s,"polygon",{points:band,fill:"var(--s-orange)","fill-opacity":0.18});
+    add(s,"polyline",{points:fc.map(f=>X(f.x)+","+Y(f.y)).join(" "),fill:"none",stroke:"var(--s-orange)","stroke-width":2,"stroke-dasharray":"4 3"});
+    add(s,"circle",{cx:X(2027),cy:Y(fc[2].y),r:4,fill:"var(--s-orange)",stroke:"var(--panel)","stroke-width":2});
+    add(s,"text",{x:X(2027)-6,y:Y(fc[2].y)-8,"text-anchor":"end",class:"lbl"},"2027: "+fmt(fc[2].y)); }
+  [0,1].forEach(si=>{ const p=pts.filter(q=>q.s===si); if(!p.length) return; const col=si?"var(--ink-2)":"var(--s-gray)";
+    add(s,"polyline",{points:p.map(q=>X(q.x)+","+Y(q.y)).join(" "),fill:"none",stroke:col,"stroke-width":2});
+    p.forEach(q=>add(s,"circle",{cx:X(q.x),cy:Y(q.y),r:2.5,fill:col})); });
+  const hit=add(s,"rect",{x:m.l,y:m.t,width:w-m.l-m.r,height:h-m.t-m.b,fill:"transparent"});
+  hit.addEventListener("mousemove",e=>{ const r=s.getBoundingClientRect(); const xv=2018+((e.clientX-r.left)/r.width*w-m.l)/(w-m.l-m.r)*9; const yr=Math.round(xv);
+    const p=pts.find(q=>q.x===yr), f=fc.find(q=>q.x===yr && yr>2025);
+    const html='<div class="t">Use during '+yr+'</div>'+(p?'<div class="num">'+fmt(p.y)+' MWh</div>':'')+(f?'<div class="num">forecast '+fmt(f.y)+' MWh</div><div class="m num">80% range '+fmt(f.lo)+'–'+fmt(f.hi)+'</div>':'');
+    if(p||f) showTip(el,html,e); else hideTip(el); });
+  hit.addEventListener("mouseleave",()=>hideTip(el)); }
+
+// ---- priority list
+const COLS=[["name","Buurt",0],["gmn","Municipality",0],["prio","Priority",0],["nnow","At limit now",1],["n27c","Cross 2027 central",1],["n27h","Cross 2027 high",1],["head","Least headroom",1],["risk","Stress risk",1],["g27","Growth to 2027",1],["drv","First driver",0]];
+function renderList(){ const tb=$("listtbl"); if(!tb.tHead.rows.length){ tb.tHead.innerHTML='<tr>'+COLS.map(c=>'<th class="'+(c[2]?'n':'')+'" data-k="'+c[0]+'" scope="col">'+c[1]+'</th>').join("")+'</tr>';
+    tb.tHead.querySelectorAll("th").forEach(th=>th.addEventListener("click",()=>{ const k=th.dataset.k; state.sort = state.sort&&state.sort.k===k ? {k,dir:-state.sort.dir} : {k,dir:(k==="head"||k==="prio"||k==="name"||k==="gmn")?1:-1}; renderList(); })); }
+  let rows=B.filter(b=>visible(b) && b.prio<=4);
+  if(state.sort){ const {k,dir}=state.sort; rows.sort((a,c)=>{ const va=k==="drv"?D.drv[a.drv[0]]||"":a[k], vc=k==="drv"?D.drv[c.drv[0]]||"":c[k]; if(va==null) return 1; if(vc==null) return -1; return (va>vc?1:va<vc?-1:0)*dir; }); }
+  else rows.sort((a,c)=>a.prio-c.prio || (a.head??99)-(c.head??99));
+  const n=Math.min(rows.length,state.listN);
+  tb.tBodies[0].innerHTML=rows.slice(0,n).map(b=>'<tr data-c="'+b.code+'" tabindex="0"><td>'+esc(b.name)+'</td><td>'+esc(b.gmn)+'</td><td><span class="pill" style="font-size:11.5px"><i class="sw" style="background:var(--p'+b.prio+')"></i>'+PR[b.prio]+'</span></td><td class="n">'+b.nnow+'</td><td class="n">'+b.n27c+'</td><td class="n">'+b.n27h+'</td><td class="n">'+(b.head==null?"–":fmt(b.head,1)+"%")+'</td><td class="n">'+(b.risk==null?"–":fmt(b.risk*100,0)+"%")+'</td><td class="n">'+pct(b.g27)+'</td><td>'+esc(D.drv[b.drv[0]]||"–")+'</td></tr>').join("");
+  $("listinfo").textContent="Showing "+fmt(n)+" of "+fmt(rows.length)+" buurten with priority 1–4 in the current filters"; $("listmore").hidden = n>=rows.length;
+  tb.tBodies[0].querySelectorAll("tr").forEach(tr=>{ const go=()=>{ setTab("map"); select(tr.dataset.c,true); }; tr.addEventListener("click",go); tr.addEventListener("keydown",e=>{ if(e.key==="Enter") go(); }); }); }
+$("listmore").addEventListener("click",()=>{ state.listN+=100; renderList(); });
+
+// ---- scenarios
+function renderScen(){ const el=$("scen-chart"); const names={low:"Low demand",central:"Central",high:"High demand",stresstest:"Stress test",solar:"If solar-driven"};
+  $("scen-lg").innerHTML='<span><i class="sw" style="background:var(--s-blue-light)"></i>Use during 2026</span><span><i class="sw" style="background:var(--s-blue)"></i>2027 (coming year)</span><span><i class="sw" style="background:var(--ink-2);width:2px;height:12px;border-radius:0"></i>today: '+fmt(now)+'</span>';
+  const keys=["low","central","high","stresstest","solar"], w=620, rowH=46, m={l:118,r:56,t:8,b:26}, h=m.t+m.b+rowH*keys.length; const s=svg(el,w,h);
+  const max=2400, X=v=>m.l+v/max*(w-m.l-m.r);
+  niceTicks(0,max,4).forEach(t=>{ add(s,"line",{x1:X(t),x2:X(t),y1:m.t,y2:h-m.b,class:"grid"}); add(s,"text",{x:X(t),y:h-8,"text-anchor":"middle"},fmt(t)); });
+  keys.forEach((k,i)=>{ const y0=m.t+i*rowH; add(s,"text",{x:m.l-10,y:y0+rowH/2+4,"text-anchor":"end",class:k==="central"?"lblb":"lbl"},names[k]);
+    [["use during 2026","var(--s-blue-light)",0],["use during 2027","var(--s-blue)",1]].forEach(([hz,col,j])=>{ const r=sc(hz,k), y=y0+7+j*16, bw=X(r.transformers_at_or_above_nbl)-m.l;
+      const rect=add(s,"path",{d:"M"+m.l+","+y+"h"+(bw-4)+"a4,4 0 0 1 4,4v4a4,4 0 0 1 -4,4h"+(-(bw-4))+"z",fill:col,"fill-opacity":k==="solar"?0.45:1});
+      if(j===1) add(s,"text",{x:X(r.transformers_at_or_above_nbl)+6,y:y+11,class:"lbl"},fmt(r.transformers_at_or_above_nbl));
+      rect.addEventListener("mousemove",e=>showTip(el,'<div class="t">'+names[k]+' · '+hz.replace("use during ","")+'</div><div class="num">'+fmt(r.transformers_at_or_above_nbl)+' at/above NBL</div><div class="m num">'+pct(r.change_vs_now_pct)+' vs today · '+fmt(r.newly)+' newly</div>',e));
+      rect.addEventListener("mouseleave",()=>hideTip(el)); }); });
+  add(s,"line",{x1:X(now),x2:X(now),y1:m.t,y2:h-m.b,stroke:"var(--ink-2)","stroke-width":1.5});
+  const ht=$("headtbl"); ht.innerHTML='<thead><tr><th style="cursor:default">Headroom below NBL</th><th class="n" style="cursor:default">Transformers</th><th class="n" style="cursor:default">Cross 2027 central</th><th class="n" style="cursor:default">Cross 2027 high</th><th class="n" style="cursor:default">If solar-driven</th></tr></thead><tbody>'+
+    D.heads.map(r=>'<tr style="cursor:default"><td>'+({"now":"At or above the limit now","0-1":"0–1%","1-5":"1–5%","5-10":"5–10%",">10":"more than 10%"})[r[0]]+'</td>'+r.slice(1).map((v,i)=>'<td class="n">'+(r[0]==="now"&&i>0?"–":fmt(v))+'</td>').join("")+'</tr>').join("")+'</tbody>';
+  const t25=B.reduce((a,b)=>a+(b.kwh25||0),0)/1e9, t27=B.reduce((a,b)=>a+(b.kwh27||0),0)/1e9, f25=B.reduce((a,b)=>a+(b.f25||0),0)/1e9, f26=B.reduce((a,b)=>a+(b.f26||0),0)/1e9;
+  $("area-kv").innerHTML=kv("Use during 2025",fmt(t25,2)+" TWh")+kv("2027 central",fmt(t27,2)+" TWh ("+pct((t27/t25-1)*100)+")")+kv("Solar feed-in 2024 → 2025",fmt(f25,2)+" → "+fmt(f26,2)+" TWh")+kv("PV growth, weather-corrected","+7.2% / yr"); }
+
+// ---- drivers
+const NICE={kwh_per_kw_capacity:"Demand per kW of capacity",kw_capacity_per_conn:"Capacity per connection",bev_dich:"Population density",a_opp_ha:"Buurt area",a_lan_ha:"Buurt land area",a_bedv:"Number of businesses",capacity_kw_total:"Total transformer capacity",conn_per_trafo:"Connections per transformer",feedin_kwh_per_kw_cap:"Solar feed-in per kW of capacity",n_transformers:"Number of transformers",ste_oad:"Address density",p_bj_me10:"Homes older than 10 years",temp_mean_c:"Average temperature",p_won_z:"Gas-free homes",share_3phase_pct:"3-phase connections",total_kwh:"Total electricity demand",g_ele:"Electricity use per home",solar_homes_per_trafo:"Solar homes per transformer",g_ink_pi:"Income per inhabitant",kwh_per_conn:"Demand per connection",p_bjj2k:"Homes built before 2000",connections:"Number of connections",a_inw:"Inhabitants"};
+function shapChart(el,rows){ const w=520,rh=24,m={l:210,r:60,t:4,b:22},h=m.t+m.b+rh*rows.length; const s=svg(el,w,h); const max=Math.max(...rows.map(r=>r[1]));
+  const X=v=>m.l+v/max*(w-m.l-m.r);
+  niceTicks(0,max,3).forEach(t=>{ add(s,"line",{x1:X(t),x2:X(t),y1:m.t,y2:h-m.b,class:"grid"}); add(s,"text",{x:X(t),y:h-6,"text-anchor":"middle"},t); });
+  rows.forEach((r,i)=>{ const y=m.t+i*rh+5, bw=Math.max(2,X(r[1])-m.l), col=r[2]>0?"var(--s-orange)":"var(--s-blue)";
+    add(s,"text",{x:m.l-8,y:y+11,"text-anchor":"end",class:"lbl"},NICE[r[0]]||r[0]);
+    const p=add(s,"path",{d:"M"+m.l+","+y+"h"+(bw-4)+"a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h"+(-(bw-4))+"z",fill:col});
+    add(s,"text",{x:m.l+bw+6,y:y+11},(r[2]>0?"↑ ":"↓ ")+r[1]);
+    p.addEventListener("mousemove",e=>showTip(el,'<div class="t">'+(NICE[r[0]]||r[0])+'</div><div class="num">mean |SHAP| '+r[1]+'</div><div class="m">'+(r[2]>0?"higher value → more stress":"higher value → less stress")+'</div>',e)); p.addEventListener("mouseleave",()=>hideTip(el)); }); }
+function renderDrv(){ const lg='<span><i class="sw" style="background:var(--s-orange)"></i>↑ higher value, more stress</span><span><i class="sw" style="background:var(--s-blue)"></i>↓ higher value, less stress</span>';
+  $("shap-lg").innerHTML=lg; $("shap-lg2").innerHTML=lg; shapChart($("shap-u"),D.su); shapChart($("shap-s"),D.ss);
+  // scatter
+  const el=$("scatter"), w=520,h=330,m={l:46,r:12,t:26,b:36}; const s=svg(el,w,h); const pts=D.scat.filter(p=>p[0]>0&&p[1]!=null);
+  const lx0=Math.log10(200), lx1=Math.log10(10000), X=v=>m.l+(Math.log10(Math.max(200,Math.min(10000,v)))-lx0)/(lx1-lx0)*(w-m.l-m.r), Y=v=>m.t+(1-Math.min(v,1.2)/1.2)*(h-m.t-m.b);
+  [0,0.3,0.6,0.9,1.2].forEach(t=>{ add(s,"line",{x1:m.l,x2:w-m.r,y1:Y(t),y2:Y(t),class:"grid"}); add(s,"text",{x:m.l-6,y:Y(t)+4,"text-anchor":"end"},Math.round(t*100)+"%"); });
+  [200,500,1000,2000,5000,10000].forEach(t=>{ add(s,"line",{x1:X(t),x2:X(t),y1:m.t,y2:h-m.b,class:"grid"}); add(s,"text",{x:X(t),y:h-m.b+14,"text-anchor":"middle"},fmt(t)); });
+  add(s,"text",{x:(m.l+w-m.r)/2,y:h-4,"text-anchor":"middle"},"kWh per year per kW of transformer capacity (log)");
+  add(s,"text",{x:m.l,y:m.t-0,"text-anchor":"start",dy:"-1"},"");
+  pts.filter(p=>!p[2]).forEach(p=>add(s,"circle",{cx:X(p[0]),cy:Y(p[1]),r:2.2,fill:"var(--s-gray)","fill-opacity":0.55}));
+  pts.filter(p=>p[2]).forEach(p=>add(s,"circle",{cx:X(p[0]),cy:Y(p[1]),r:2.6,fill:"var(--s-orange)","fill-opacity":0.85}));
+  add(s,"text",{x:4,y:12,class:"lbl"},"Utilisation (peak ÷ capacity)");
+  // first drivers
+  const cnt={}; B.forEach(b=>{ if(b.drv[0]>=0){ const d=D.drv[b.drv[0]]; cnt[d]=(cnt[d]||0)+1; } });
+  const top=Object.entries(cnt).sort((a,c)=>c[1]-a[1]).slice(0,10); const e2=$("drv1"), w2=600,rh=26,m2={l:310,r:56,t:4,b:6},h2=m2.t+m2.b+rh*top.length; const s2=svg(e2,w2,h2); const mx=top[0][1];
+  top.forEach(([d,n],i)=>{ const y=m2.t+i*rh+5, bw=Math.max(2,n/mx*(w2-m2.l-m2.r)); add(s2,"text",{x:m2.l-8,y:y+12,"text-anchor":"end",class:"lbl"},d);
+    add(s2,"path",{d:"M"+m2.l+","+y+"h"+(bw-4)+"a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h"+(-(bw-4))+"z",fill:"var(--s-blue)"}); add(s2,"text",{x:m2.l+bw+6,y:y+12},fmt(n)); }); }
+
+// ---- context
+function renderCtx(){ const cov=D.cov; const tot=cov.reduce((a,r)=>a+r[2],0); const wint=cov.filter(r=>[11,12,1,2].includes(+r[0].slice(5,7)));
+  $("cov-cap").textContent="Bars: transformers whose highest load fell on that day. Line: KNMI daily radiation. Only "+fmt(100*wint.reduce((a,r)=>a+r[2],0)/tot,1)+"% of peaks fall in November–February ("+fmt(100*wint.length/cov.length,0)+"% of the window), and peaks were recorded on "+cov.filter(r=>r[2]>0).length+" of "+cov.length+" days. Long empty stretches point to periods that were not measured.";
+  const el=$("cov-chart"), w=1100,h=200,m={l:50,r:12,t:10,b:8}; const s=svg(el,w,h); const n=cov.length, bw=(w-m.l-m.r)/n; const max=2800;
+  const X=i=>m.l+i*bw, Y=v=>m.t+(1-v/max)*(h-m.t-m.b);
+  niceTicks(0,max,4).forEach(t=>{ add(s,"line",{x1:m.l,x2:w-m.r,y1:Y(t),y2:Y(t),class:"grid"}); add(s,"text",{x:m.l-6,y:Y(t)+4,"text-anchor":"end"},fmt(t)); });
+  cov.forEach((r,i)=>{ if(!r[2]) return; const b=add(s,"rect",{x:X(i)+0.3,y:Y(r[2]),width:Math.max(1,bw-0.6),height:Y(0)-Y(r[2]),fill:"var(--s-blue)"}); });
+  const hit=add(s,"rect",{x:m.l,y:m.t,width:w-m.l-m.r,height:h-m.t-m.b,fill:"transparent"});
+  const el2=$("cov-rad"), h2=120,m2={l:50,r:12,t:6,b:24}; const s2=svg(el2,w,h2); const Y2=v=>m2.t+(1-v/9)*(h2-m2.t-m2.b);
+  [0,3,6,9].forEach(t=>{ add(s2,"line",{x1:m2.l,x2:w-m2.r,y1:Y2(t),y2:Y2(t),class:"grid"}); add(s2,"text",{x:m2.l-6,y:Y2(t)+4,"text-anchor":"end"},t); });
+  add(s2,"polyline",{points:cov.map((r,i)=>(X(i)+bw/2)+","+Y2(r[1]||0)).join(" "),fill:"none",stroke:"var(--s-orange)","stroke-width":1.5});
+  add(s2,"text",{x:m2.l+4,y:m2.t+10,class:"lbl"},"radiation, kWh/m² per day");
+  cov.forEach((r,i)=>{ if(r[0].slice(8,10)==="01") add(s2,"text",{x:X(i),y:h2-6,"text-anchor":"start"},["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+r[0].slice(5,7)-1]+(r[0].slice(5,7)==="01"||i<31?" "+r[0].slice(0,4):"")); });
+  add(s,"text",{x:m.l+4,y:m.t+12,class:"lbl"},"transformers peaking on the day");
+  const ht=(evt,svgEl)=>{ const r=svgEl.getBoundingClientRect(); const i=Math.floor(((evt.clientX-r.left)/r.width*w-m.l)/bw); const d=cov[i]; if(!d) return null; return d; };
+  [[hit,s,el]].forEach(([hh,ss,ee])=>{ hh.addEventListener("mousemove",e=>{ const d=ht(e,ss); if(!d){hideTip(ee);return;} showTip(ee,'<div class="t">'+d[0]+'</div><div class="num">'+fmt(d[2])+' transformers peaking</div><div class="m num">radiation '+fmt(d[1],1)+' kWh/m²</div>',e); }); hh.addEventListener("mouseleave",()=>hideTip(ee)); });
+  // national energy
+  const ey=D.ey; barMini($("nat-e"),ey.filter(r=>r.complete_year).map(r=>[r.year,r.energy_twh]),v=>fmt(v,0),"TWh");
+  lineMini($("nat-p"),ey.map(r=>[r.year,r.peak_mw/1000]),[["var(--s-blue)",null]],v=>fmt(v,1),15,22,"GW",ey.map(r=>r.peak_time));
+  const cars=D.cars; lineMini($("nat-ev"),cars.map(r=>[r[0],100*r[2]/r[1],100*r[3]/r[1]]),[["var(--s-blue)","Fully electric"],["var(--s-orange)","Plug-in hybrid"]],v=>fmt(v,1)+"%",0,8);
+  heat($("nat-heat")); }
+function barMini(el,rows,f,unit){ const w=360,h=200,m={l:40,r:8,t:16,b:22}; const s=svg(el,w,h); const max=130; const bw=(w-m.l-m.r)/rows.length;
+  const Y=v=>m.t+(1-v/max)*(h-m.t-m.b); niceTicks(0,max,4).forEach(t=>{ add(s,"line",{x1:m.l,x2:w-m.r,y1:Y(t),y2:Y(t),class:"grid"}); add(s,"text",{x:m.l-6,y:Y(t)+4,"text-anchor":"end"},t); });
+  rows.forEach((r,i)=>{ const x=m.l+i*bw+bw*0.25, bwi=bw*0.5, y=Y(r[1]); const p=add(s,"path",{d:"M"+x+","+Y(0)+"v"+(-(Y(0)-y-4))+"a4,4 0 0 1 4,-4h"+(bwi-8)+"a4,4 0 0 1 4,4v"+(Y(0)-y-4)+"z",fill:r[0]===2022?"var(--s-orange)":"var(--s-blue)"});
+    add(s,"text",{x:x+bwi/2,y:h-6,"text-anchor":"middle"},"'"+String(r[0]).slice(2)); if(r[0]===2022||i===rows.length-1) add(s,"text",{x:x+bwi/2,y:y-5,"text-anchor":"middle",class:"lbl"},f(r[1]));
+    p.addEventListener("mousemove",e=>showTip(el,'<div class="t">'+r[0]+'</div><div class="num">'+f(r[1])+' '+unit+'</div>'+(r[0]===2022?'<div class="m">energy crisis</div>':''),e)); p.addEventListener("mouseleave",()=>hideTip(el)); }); }
+function lineMini(el,rows,series,f,lo,hi,unit,notes){ const w=360,h=200,m={l:40,r:44,t:16,b:22}; const s=svg(el,w,h); const x0=rows[0][0], x1=rows[rows.length-1][0];
+  const X=x=>m.l+(x-x0)/(x1-x0)*(w-m.l-m.r), Y=v=>m.t+(1-(v-lo)/(hi-lo))*(h-m.t-m.b);
+  niceTicks(lo,hi,4).forEach(t=>{ add(s,"line",{x1:m.l,x2:w-m.r,y1:Y(t),y2:Y(t),class:"grid"}); add(s,"text",{x:m.l-6,y:Y(t)+4,"text-anchor":"end"},t); });
+  rows.forEach(r=>add(s,"text",{x:X(r[0]),y:h-6,"text-anchor":"middle"},"'"+String(r[0]).slice(2)));
+  series.forEach(([col,name],j)=>{ add(s,"polyline",{points:rows.map(r=>X(r[0])+","+Y(r[j+1])).join(" "),fill:"none",stroke:col,"stroke-width":2});
+    rows.forEach(r=>add(s,"circle",{cx:X(r[0]),cy:Y(r[j+1]),r:3,fill:col,stroke:"var(--panel)","stroke-width":1.5}));
+    const last=rows[rows.length-1]; add(s,"text",{x:X(last[0])+6,y:Y(last[j+1])+4,class:"lbl"},f(last[j+1])); });
+  const hit=add(s,"rect",{x:m.l,y:m.t,width:w-m.l-m.r,height:h-m.t-m.b,fill:"transparent"});
+  hit.addEventListener("mousemove",e=>{ const r=s.getBoundingClientRect(); const xv=x0+((e.clientX-r.left)/r.width*w-m.l)/(w-m.l-m.r)*(x1-x0); const i=Math.max(0,Math.min(rows.length-1,Math.round(xv-x0))); const row=rows[i];
+    showTip(el,'<div class="t">'+row[0]+'</div>'+series.map(([c,nm],j)=>'<div class="num">'+(nm?nm+": ":"")+f(row[j+1])+(unit?" "+unit:"")+'</div>').join("")+(notes?'<div class="m num">'+notes[i]+'</div>':''),e); });
+  hit.addEventListener("mouseleave",()=>hideTip(el)); }
+function heat(el){ const w=620,h=250,m={l:36,r:8,t:4,b:22}; const s=svg(el,w,h); const cw=(w-m.l-m.r)/24, ch=(h-m.t-m.b)/12; const vals=D.ep.map(r=>r[2]); const lo=Math.min(...vals), hi=Math.max(...vals);
+  const mon=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  D.ep.forEach(r=>{ const c=add(s,"rect",{x:m.l+r[1]*cw+0.5,y:m.t+(r[0]-1)*ch+0.5,width:cw-1,height:ch-1,rx:2,fill:lerpHex(dark()?BLUE_D:BLUE_L,(r[2]-lo)/(hi-lo))});
+    c.addEventListener("mousemove",e=>showTip(el,'<div class="t">'+mon[r[0]-1]+' · '+String(r[1]).padStart(2,"0")+':00</div><div class="num">'+fmt(r[2])+' MW average load</div>',e)); c.addEventListener("mouseleave",()=>hideTip(el)); });
+  mon.forEach((mn,i)=>add(s,"text",{x:m.l-6,y:m.t+i*ch+ch/2+4,"text-anchor":"end"},mn));
+  [0,6,12,18,23].forEach(hh=>add(s,"text",{x:m.l+hh*cw+cw/2,y:h-6,"text-anchor":"middle"},String(hh).padStart(2,"0")+"h")); }
+
+// ---- init
+drawLegend(); refresh();
+let startTab="map"; try{ const t=localStorage.getItem("gs-tab"); if(t && $("p-"+t)) startTab=t; }catch(e){}
+if(location.hash==="#context") startTab="context";
+setTab(startTab);
+let startSel=null; try{ startSel=localStorage.getItem("gs-sel"); }catch(e){}
+if(!startSel || !byCode.get(startSel)){ const c=B.filter(b=>b.prio===2).sort((a,b)=>(a.head??99)-(b.head??99))[0]; startSel=c?c.code:null; }
+requestAnimationFrame(()=>{ resize(); if(startSel) select(startSel,false); });
+})();
+</script>
