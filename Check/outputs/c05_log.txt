@@ -1,0 +1,66 @@
+Transformers: 31304 | at/above NBL now: 676 | above now: 651 | PV-type peaks: 0.990
+
+Projected transformers at/above the NBL limit:
+scenario                                low  central  high
+method                                                    
+M0 consumption x1yr (original method)   538      708   826
+M1 consumption x2yr                     437      750  1005
+M2 peak-type x1yr                       903     1267  1723
+M3 peak-type x2yr (2027)               1267     2251  3507
+
+Newly crossing:
+scenario                               low  central  high
+method                                                   
+M0 consumption x1yr (original method)    2       35   150
+M1 consumption x2yr                      8       80   329
+M2 peak-type x1yr                      229      598  1058
+M3 peak-type x2yr (2027)               598     1588  2847
+
+My buurt priority levels:
+priority
+1 Stressed now                            582
+2 Crosses by 2027 (central)                59
+3 Crosses by 2027 (high)                  186
+4 Crosses only if peaks are PV-driven     636
+5 No crossing expected                   4060
+
+Cross-table (rows = original priority, columns = my priority):
+priority                       1 Stressed now  2 Crosses by 2027 (central)  3 Crosses by 2027 (high)  4 Crosses only if peaks are PV-driven  5 No crossing expected
+priority_original                                                                                                                                                  
+1 Stressed now                            577                            0                         0                                      0                       0
+2 Crosses in central scenario               0                           16                         1                                      0                       0
+3 Crosses in high scenario                  0                           32                        60                                      0                       0
+4 Crosses in stress test only               0                            8                       118                                    126                      34
+5 No crossing expected                      0                            3                         6                                    509                    3929
+n/a                                         5                            0                         1                                      1                      97
+
+Spearman original risk_prob vs my transformer-model buurt risk: 0.778
+Overlap of the top-250 model-risk buurten: 123 of 250
+
+Top 20 buurten crossing by 2027 (central), least headroom first:
+            buurtnaam        gemeentenaam  n_trafo  n_2027_central  min_headroom_pct  p_buurt_model             priority_original
+          Kop Zeedijk           Amsterdam        6               1              0.17           0.15    3 Crosses in high scenario
+       Beethovenbuurt           Amsterdam        4               1              0.18           0.03 2 Crosses in central scenario
+             Puiflijk              Druten        4               1              0.26           0.04 2 Crosses in central scenario
+Landelijk gebied-West             Alkmaar       14               1              0.26           0.19 2 Crosses in central scenario
+ Haarlemmerbuurt-West           Amsterdam        7               1              0.26           0.12 2 Crosses in central scenario
+       Zeeheldenbuurt Alphen aan den Rijn        5               1              0.26           0.01    3 Crosses in high scenario
+      Jacob Geelbuurt           Amsterdam        5               1              0.33           0.04 2 Crosses in central scenario
+     Cremerbuurt-West           Amsterdam        7               1              0.52           0.16 2 Crosses in central scenario
+        Wezep-Centrum           Oldebroek       17               1              0.52           0.18 2 Crosses in central scenario
+               Akkrum          Heerenveen       23               1              0.52           0.07 2 Crosses in central scenario
+             Silvolde   Oude IJsselstreek       16               1              0.57           0.09 2 Crosses in central scenario
+       Harselaar-West           Barneveld       15               1              0.57           0.21 2 Crosses in central scenario
+    Centrum Venhuizen        Drechterland        7               1              0.65           0.04 2 Crosses in central scenario
+     Balboaplein e.o.           Amsterdam        1               1              0.72           0.00    3 Crosses in high scenario
+     Centrum Lunteren                 Ede       15               1              0.78           0.08 2 Crosses in central scenario
+              De Zilk           Noordwijk        6               1              0.91           0.02 2 Crosses in central scenario
+     Waardenburg-West         West Betuwe        6               1              0.91           0.13    3 Crosses in high scenario
+           Buitenpost       Achtkarspelen       21               1              1.04           0.11    3 Crosses in high scenario
+ Timorpleinbuurt-Zuid           Amsterdam        4               1              1.04           0.13    3 Crosses in high scenario
+      Frans Halsbuurt           Amsterdam        4               1              1.04           0.13    3 Crosses in high scenario
+
+Same buurt for the same transformer (original vs mine): 1.0000
+
+2026 buurt kWh, my range-splitting vs original start-postcode: median abs diff 3.14%, buurten with >10% difference: 0.228, correlation 0.9982
+DONE c05

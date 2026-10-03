@@ -1,0 +1,33 @@
+Median buurt growth per year t->t+1 (%):
+year
+2019    0.52
+2020    0.61
+2021    1.12
+2022   -3.34
+2023   -3.17
+2025    2.93
+test 2023->2024: MAE LightGBM 0.0379 | 'follow the country' 0.0392 | persistence 0.0490 | Spearman 0.188
+test 2025->2026: MAE LightGBM 0.0357 | 'follow the country' 0.0358 | persistence 0.0358 | Spearman 0.250
+Year-to-year correlation of a buurt's RELATIVE growth (does local growth persist?):
+   2019 vs 2020: 0.009
+   2020 vs 2021: 0.120
+   2021 vs 2022: 0.052
+   2022 vs 2023: 0.215
+
+Feed-in, Liander area: 2.74 -> 3.27 TWh (+19.3%)
+Radiation 2025 / 2024 at stations: median 1.114 (min 1.062, max 1.165)
+Feed-in growth per buurt, raw median +18.5% | weather-corrected (PV) median +6.9% | area (kWh-weighted) +7.3%
+Shrunk PV growth per buurt (%):
+count    5710.00
+mean        8.62
+std         6.94
+min        -4.88
+5%          2.52
+25%         5.52
+50%         7.19
+75%         9.45
+95%        20.20
+max        49.18
+Spearman of PV growth with drivers: p_won_zs -0.21, g_ele_tr -0.21, p_1gezw -0.12, p_koopw -0.15, g_ink_pi 0.11, g_wozbag -0.06, p_bj_mi10 -0.07
+saved buurt_growth.csv (5749, 9)
+DONE c04

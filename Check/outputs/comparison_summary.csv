@@ -1,0 +1,18 @@
+item,transformers_at_or_above_NBL
+"M0 central (my data, original method)",708
+original: at/above now,671
+original: central 2026,693
+original: high 2026,812
+Claude: at/above now,676
+Claude M0 consumption x1yr (original method) low,538
+Claude M1 consumption x2yr low,437
+Claude M2 peak-type x1yr low,903
+Claude M3 peak-type x2yr (2027) low,1267
+Claude M0 consumption x1yr (original method) central,708
+Claude M1 consumption x2yr central,750
+Claude M2 peak-type x1yr central,1267
+Claude M3 peak-type x2yr (2027) central,2251
+Claude M0 consumption x1yr (original method) high,826
+Claude M1 consumption x2yr high,1005
+Claude M2 peak-type x1yr high,1723
+Claude M3 peak-type x2yr (2027) high,3507

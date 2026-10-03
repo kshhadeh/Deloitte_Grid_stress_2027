@@ -1,0 +1,64 @@
+transformers: 31304, features: 49, municipalities: 143
+above NBL: 0.0208   (never used as features: peak, util, peak date/type)
+capacity only            transformer ROC-AUC 0.585  PR-AUC 0.028 | util R2 0.137  MAE 0.1739  Spearman 0.376
+consumption-side only    transformer ROC-AUC 0.586  PR-AUC 0.030 | util R2 0.233  MAE 0.1607  Spearman 0.503
+feed-in-side only        transformer ROC-AUC 0.664  PR-AUC 0.035 | util R2 0.227  MAE 0.1610  Spearman 0.501
+all features             transformer ROC-AUC 0.705  PR-AUC 0.045 | util R2 0.275  MAE 0.1554  Spearman 0.545
+
+Buurt level (from transformer model): ROC-AUC 0.749 PR-AUC 0.255  (buurten 5523, stressed 0.101)
+Same 5423 buurten as the original Model B (original label stress_nbl):
+   original buurt model  ROC-AUC 0.753  PR-AUC 0.271
+   Claude transformer->buurt ROC-AUC 0.750  PR-AUC 0.257
+   Spearman between the two risk scores: 0.778
+AUC inside buurt-size bands (removes the 'more transformers = more chance' effect):
+  n_trafo  buurten  stressed  auc_original  auc_claude
+   (0, 2]     1332     0.032         0.718       0.714
+   (2, 4]     1481     0.072         0.683       0.700
+   (4, 7]     1331     0.109         0.688       0.691
+  (7, 12]      849     0.154         0.640       0.605
+(12, 999]      430     0.300         0.682       0.661
+
+Transformer tiers (out-of-fold): actual share above NBL
+            size   mean
+tier                   
+Low        15652  0.009
+Medium      9391  0.023
+High        4695  0.038
+Very high   1566  0.070
+
+Top 15 SHAP (above NBL):
+              feature  mean_abs_shap  direction
+        capacity_kw_f         0.4399    -0.9409
+   cap_share_in_buurt         0.2325    -0.9218
+     b_kwh_per_kw_cap         0.2261     0.9422
+               a_bedv         0.1611     0.9167
+exp_feedin_this_trafo         0.1490    -0.8342
+             bev_dich         0.1387     0.4875
+              ste_oad         0.1296     0.6632
+         b_feed_share         0.1229    -0.8522
+                b_kwh         0.1163     0.8543
+             a_lan_ha         0.1161    -0.8964
+       b_kwh_per_conn         0.1140     0.8463
+            b_n_trafo         0.1064    -0.9015
+        b_cons_growth         0.0991    -0.7341
+              p_won_z         0.0974    -0.7389
+       b_share_3phase         0.0915    -0.5837
+
+Top 15 SHAP (utilisation):
+              feature  mean_abs_shap  direction
+            nbl_ratio         0.0479     0.7629
+     b_kwh_per_kw_cap         0.0414     0.9808
+        capacity_kw_f         0.0297    -0.8842
+             a_lan_ha         0.0186    -0.9517
+    b_conn_per_kw_cap         0.0148     0.9242
+            b_n_trafo         0.0142    -0.9546
+             bev_dich         0.0135     0.7993
+   cap_share_in_buurt         0.0105    -0.9285
+       b_kwh_per_conn         0.0072     0.8765
+              ste_oad         0.0069     0.5058
+       b_share_3phase         0.0066    -0.8796
+               a_bedv         0.0058     0.9232
+exp_feedin_this_trafo         0.0047    -0.7906
+             g_wozbag         0.0040     0.7619
+   exp_kwh_this_trafo         0.0040    -0.0693
+DONE c03

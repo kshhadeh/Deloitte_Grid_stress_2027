@@ -1,0 +1,104 @@
+Peak window: 2024-09-03 - 2025-07-10  (311 days)
+
+15 dates with the most transformer peaks (Q = radiation J/cm2, TG/TX in 0.1 C):
+                 Q     TG     TX  n_peaks  Q_rank_pct  cold_rank_pct
+date                                                                
+2025-04-04  2001.5  128.1  209.8   2741.0        82.0           33.4
+2025-06-30  2965.8  223.0  291.9   2029.0       100.0            1.6
+2025-06-12  2908.4  199.0  266.6   1832.0        99.4            4.8
+2025-04-05  2064.8   98.8  155.3   1814.0        84.2           48.9
+2025-06-20  2886.0  188.2  249.0   1705.0        99.0            5.8
+2025-04-03  1951.5  130.1  197.5   1664.0        81.0           32.2
+2025-06-21  2954.9  225.8  304.1   1653.0        99.7            1.0
+2025-06-24  1358.0  178.0  215.3   1575.0        66.6            9.6
+2025-06-27  1811.1  181.3  223.5   1545.0        78.1            8.7
+2025-06-13  2713.1  239.5  301.9   1484.0        95.5            0.6
+2025-07-01  2851.0  268.2  349.9   1246.0        98.7            0.3
+2025-05-16  2093.8  116.5  164.2   1242.0        85.2           39.2
+2025-06-26  1159.8  192.7  225.2    844.0        58.5            5.1
+2025-06-23  2111.0  178.5  205.6    823.0        85.9            9.3
+2025-06-25  2079.3  203.0  249.7    771.0        84.6            3.9
+share of all peaks on the 10% sunniest days :  45.9%  (these days are 10% of the window)
+share of all peaks on the 10% coldest days  :   0.0%  (these days are 10% of the window)
+share of all peaks on the Nov-Feb (winter)  :   0.9%  (these days are 39% of the window)
+
+Sunniest 20 days from March 2025 and their number of peaks (0 on a top-sunny day = likely no data):
+                 Q     TX  n_peaks
+date                              
+2025-06-30  2966.0  292.0   2029.0
+2025-06-21  2955.0  304.0   1653.0
+2025-06-12  2908.0  267.0   1832.0
+2025-06-20  2886.0  249.0   1705.0
+2025-07-01  2851.0  350.0   1246.0
+2025-05-13  2814.0  223.0      0.0
+2025-05-20  2748.0  206.0      2.0
+2025-05-19  2736.0  208.0    350.0
+2025-05-12  2736.0  237.0      0.0
+2025-06-29  2730.0  258.0     98.0
+2025-05-11  2722.0  246.0      0.0
+2025-07-04  2719.0  244.0    459.0
+2025-06-17  2718.0  252.0    554.0
+2025-06-18  2717.0  249.0    593.0
+2025-06-13  2713.0  302.0   1484.0
+2025-07-03  2680.0  217.0    639.0
+2025-05-10  2672.0  215.0      0.0
+2025-06-19  2642.0  235.0     60.0
+2025-05-09  2613.0  195.0      0.0
+2025-05-14  2588.0  196.0     22.0
+Blocks of >= 7 consecutive days with ZERO peaks among 31k transformers:
+   2024-10-11 to 2024-10-21 (11 days)
+   2024-11-13 to 2024-12-05 (23 days)
+   2024-12-08 to 2025-02-03 (58 days)
+   2025-02-05 to 2025-02-23 (19 days)
+   2025-03-10 to 2025-03-17 (8 days)
+Days with at least one peak: 105 of 311
+Inside the days that DO have peaks: Spearman(n_peaks, radiation) = 0.555, vs mean temperature = 0.432
+
+Transformers with station weather on the peak day: 1.000
+Radiation rank of the peak day at the nearest station (100 = sunniest day of the window):
+count    31304.0
+mean        85.7
+std         14.8
+min          5.5
+10%         64.3
+25%         80.7
+50%         87.5
+75%         97.7
+90%         99.4
+max        100.0
+peak on a top-10% sunny day: 46.1% of transformers | on a top-10% cold day: 0.0%
+
+Peak type (rule: sunny = spring/summer day in the station's top-25% radiation):
+peak_type
+sunny day (feed-in likely)            26633
+unclear                                4372
+cold/dark day (consumption likely)      299
+Share above NBL by peak type:
+                                    above_nbl   util
+peak_type                                           
+cold/dark day (consumption likely)      0.023  0.468
+sunny day (feed-in likely)              0.019  0.414
+unclear                                 0.032  0.432
+Weekday of peak (0=Mon):
+peak_date
+0    3795
+1    4169
+2    3131
+3    6541
+4    9441
+5    3938
+6     289
+
+Buurten: 5495
+Spearman util ~ consumption per kW cap: 0.604
+Spearman util ~ feed-in per kW cap:     0.274
+Rank regression (standardised) util ~ consumption + feed-in: cons 0.710, feed-in -0.169
+By feed-in share of the buurt (feed-in / (feed-in + consumption)):
+         feed_share   util  share_sunny
+feed_q                                 
+Q1 low        0.065  0.456        0.727
+Q2            0.176  0.436        0.833
+Q3            0.242  0.426        0.860
+Q4            0.290  0.407        0.852
+Q5 high       0.353  0.381        0.905
+DONE c02
