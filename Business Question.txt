@@ -1,0 +1,10 @@
+Business Question
+
+Which neighbourhoods in the Liander area are most at risk of grid stress in the coming year, because their expected electricity demand growth meets transformers that already have little remaining capacity, and which local drivers (solar, electrification, housing, demographics, weather) explain this risk?
+
+Sub-questions
+1. Data: how can Liander, CBS, KNMI and ENTSO-E data be linked at buurt level, and what are their quality limits?
+2. Definition: how do we measure grid stress (transformer peak vs capacity / NBL limit)?
+3. Prediction: how well can LightGBM forecast demand growth and explain stress, compared with simple baselines?
+4. Explanation: which drivers are associated with stress, and how do they differ between areas (SHAP)?
+5. Communication: how can a dashboard show risk, drivers, demand trends, peaks and seasonal patterns?

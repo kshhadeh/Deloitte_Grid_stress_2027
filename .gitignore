@@ -1,0 +1,19 @@
+# Python environment and caches
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# Raw data: too large for GitHub and subject to source licences
+Data/raw/
+
+# Old results and working folders, not part of the deliverable
+Data/Processed_old_reference/
+Claude/
+
+# Assignment brief (check with Deloitte before publishing)
+Deloitte 2026.docx
+
+# Temporary inspection output
+inspect_output.txt
+# Large intermediate file (recreated by notebook 01)
+Data/processed/liander_electricity_2019_2026.csv
